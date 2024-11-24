@@ -11,6 +11,7 @@
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+class IHighlightInterface;
 
 UCLASS()
 class AURA_API AAuraPlayerController : public APlayerController
@@ -20,12 +21,12 @@ class AURA_API AAuraPlayerController : public APlayerController
 public:
 
 	AAuraPlayerController();
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
-	
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
@@ -33,5 +34,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	TScriptInterface<IHighlightInterface> LastHighlightActor;
+	TScriptInterface<IHighlightInterface> CurrentHighlightActor;
+
 	void Move(const FInputActionValue& InputActionValue);
+	void CursorTrace();
 };

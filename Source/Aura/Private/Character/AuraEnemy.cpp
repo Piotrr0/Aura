@@ -1,2 +1,26 @@
 #include "Character/AuraEnemy.h"
 
+AAuraEnemy::AAuraEnemy()
+{
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+}
+
+void AAuraEnemy::HighlightActor()
+{
+	bHighlighted = true;
+	GetMesh()->SetRenderCustomDepth(true);
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_HIGHLIGHT); // Value for Highlight
+
+	Weapon->SetRenderCustomDepth(true);
+	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_HIGHLIGHT);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s Highlight"), *GetName());
+}
+
+void AAuraEnemy::UnHighlightActor()
+{
+	bHighlighted = false;
+	GetMesh()->SetRenderCustomDepth(false);
+	Weapon->SetRenderCustomDepth(false);
+	UE_LOG(LogTemp, Warning, TEXT("%s UnHighlight"), *GetName());
+}
