@@ -34,6 +34,11 @@ void AAuraEnemy::UnHighlightActor()
 	UE_LOG(LogTemp, Warning, TEXT("%s UnHighlight"), *GetName());
 }
 
+int32 AAuraEnemy::GetPlayerLevel()
+{
+	return Level;
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();

@@ -17,6 +17,7 @@ public:
 	AAuraEnemy();
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	virtual int32 GetPlayerLevel() override;
 
 protected:
 
@@ -26,6 +27,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bHighlighted = false;
+private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults", meta = (AllowPrivateAccess = true))
+	int32 Level = 1;
 
 	
 };
