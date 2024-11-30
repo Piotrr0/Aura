@@ -43,7 +43,7 @@ class AURA_API UOverlayWidgetController : public UAuraWidgetController
 public:
 
 	virtual void BroadcastInitialValues() override;
-	virtual void BindCallbacksDependencies() override;
+	virtual void BindCallbacksToDependencies() override;
 
 	
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
