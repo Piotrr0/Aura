@@ -12,6 +12,10 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class IHighlightInterface;
+class UAuraInputConfig;
+struct FGameplayTag;
+class UAuraAbilitySystemComponent;
+
 
 UCLASS()
 class AURA_API AAuraPlayerController : public APlayerController
@@ -33,6 +37,18 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UAuraInputConfig> InputConfig;
+
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+
+	UAuraAbilitySystemComponent* GetASC();
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
 
 	TScriptInterface<IHighlightInterface> LastHighlightActor;
 	TScriptInterface<IHighlightInterface> CurrentHighlightActor;
