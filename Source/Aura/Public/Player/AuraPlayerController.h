@@ -15,6 +15,7 @@ class IHighlightInterface;
 class UAuraInputConfig;
 struct FGameplayTag;
 class UAuraAbilitySystemComponent;
+class USplineComponent;
 
 
 UCLASS()
@@ -53,6 +54,25 @@ private:
 	TScriptInterface<IHighlightInterface> LastHighlightActor;
 	TScriptInterface<IHighlightInterface> CurrentHighlightActor;
 
+	FHitResult CursorHit;
+
 	void Move(const FInputActionValue& InputActionValue);
 	void CursorTrace();
+
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
+	float ShortPressedThreshold = 0.5f;
+	bool bAutoRunning = false;
+
+	UPROPERTY(EditDefaultsOnly)
+	float AutoRunAcceptanceRadius = 50.f;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> Spline;
+
+	bool bTargeting = false;
+
+	void ActivateAutoRun();
+	void AutoRun();
+	void HeldRun();
 };

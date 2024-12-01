@@ -5,16 +5,40 @@
 #include "Input/AuraInputComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Components/SplineComponent.h"
+#include "AuraGameplayTags.h"
+#include "NavigationSystem.h"
+#include "NavigationPath.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
+	Spline = CreateDefaultSubobject<USplineComponent>(FName("Spline"));
 }
 
 void AAuraPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	CursorTrace();
+	AutoRun();
+}
+
+void AAuraPlayerController::AutoRun()
+{
+	if (!bAutoRunning) return;
+
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		ControlledPawn->AddMovementInput(Direction);
+
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)
+		{
+			bAutoRunning = false;
+		}
+	}
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -60,20 +84,87 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-
+	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		bTargeting = CurrentHighlightActor ? true : false;
+		bAutoRunning = false;
+	}
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	if (GetASC() == nullptr) return;
-		GetASC()->AbilityInputTagReleased(InputTag);
+	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		if (GetASC())
+			GetASC()->AbilityInputTagReleased(InputTag);
+
+		return;
+	}
+	if (bTargeting)
+	{
+		if (GetASC())
+			GetASC()->AbilityInputTagReleased(InputTag);
+	}
+	else
+	{
+		ActivateAutoRun();
+	}
+}
+
+void AAuraPlayerController::ActivateAutoRun()
+{
+	APawn* ControlledPawn = GetPawn();
+	if (FollowTime < ShortPressedThreshold && ControlledPawn)
+	{
+		if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
+		{
+			Spline->ClearSplinePoints();
+			for (const auto& PathPoint : NavPath->PathPoints)
+			{
+				Spline->AddSplinePoint(PathPoint, ESplineCoordinateSpace::World);
+			}
+			CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
+			bAutoRunning = true;
+		}
+	}
+	FollowTime = 0.f;
+	bTargeting = false; // Consider to remove
 }
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	if (GetASC() == nullptr) return;
-		GetASC()->AbilityInputTagHeld(InputTag);
+	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		if (GetASC())
+			GetASC()->AbilityInputTagHeld(InputTag);
+
+		return;
+	}
+	if (bTargeting)
+	{
+		if (GetASC())
+			GetASC()->AbilityInputTagHeld(InputTag);
+	}
+	else
+	{
+		HeldRun();
+	}
 }
+
+void AAuraPlayerController::HeldRun()
+{
+	FollowTime += GetWorld()->GetDeltaSeconds();
+	if (CursorHit.bBlockingHit)
+	{
+		CachedDestination = CursorHit.ImpactPoint;
+	}
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
+		ControlledPawn->AddMovementInput(WorldDirection);
+	}
+}
+
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 {
@@ -92,34 +183,16 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::CursorTrace()
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (CursorHit.bBlockingHit)
 	{
 		LastHighlightActor = CurrentHighlightActor;
 		CurrentHighlightActor = CursorHit.GetActor();
 
-		if (LastHighlightActor == nullptr)
+		if (LastHighlightActor != CurrentHighlightActor)
 		{
-			if (CurrentHighlightActor != nullptr)
-			{
-				CurrentHighlightActor->HighlightActor();
-			}
-		}
-		else
-		{
-			if (CurrentHighlightActor == nullptr)
-			{
-				LastHighlightActor->UnHighlightActor();
-			}
-			else
-			{
-				if (LastHighlightActor != CurrentHighlightActor)
-				{
-					LastHighlightActor->UnHighlightActor();
-					CurrentHighlightActor->HighlightActor();
-				}
-			}
+			if (LastHighlightActor) LastHighlightActor->UnHighlightActor();
+			if (CurrentHighlightActor) CurrentHighlightActor->HighlightActor();
 		}
 	}
 }
