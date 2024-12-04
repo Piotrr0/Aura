@@ -5,6 +5,8 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "UI/WidgetController/AuraWidgetController.h"
+#include "Game/AuraGameMode.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -38,4 +40,31 @@ UAttributeMenuWidgetController* UAuraAbilitySystemLibrary::GetAttributeMenuWidge
 		}
 	}
 	return nullptr;
+}
+
+void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass ChracterClass, UAbilitySystemComponent* ASC, float Level)
+{
+	if (const AAuraGameMode* AuraGameMode = Cast<AAuraGameMode>(UGameplayStatics::GetGameMode(WorldContextObject)))
+	{
+
+		AActor* AvatarActor = ASC->GetAvatarActor();
+
+		UCharacterClassInfo* ClassInfo = AuraGameMode->CharacterClassInfo;
+		const FCharacterClassDefaultInfo ClassDefaultsInfo = ClassInfo->GetClassDefaultInfo(ChracterClass);
+
+		FGameplayEffectContextHandle PrimaryContextHandle = ASC->MakeEffectContext();
+		PrimaryContextHandle.AddSourceObject(AvatarActor);
+		const FGameplayEffectSpecHandle PrimaryEffectSpec = ASC->MakeOutgoingSpec(ClassDefaultsInfo.PrimaryAttributes, Level, PrimaryContextHandle);
+		ASC->ApplyGameplayEffectSpecToSelf(*PrimaryEffectSpec.Data.Get());
+
+		FGameplayEffectContextHandle SecondaryContextHandle = ASC->MakeEffectContext();
+		SecondaryContextHandle.AddSourceObject(AvatarActor);
+		const FGameplayEffectSpecHandle SecondaryEffectSpec = ASC->MakeOutgoingSpec(ClassInfo->SecondaryAttributes, Level, SecondaryContextHandle);
+		ASC->ApplyGameplayEffectSpecToSelf(*SecondaryEffectSpec.Data.Get());
+
+		FGameplayEffectContextHandle VitalContextHandle = ASC->MakeEffectContext();
+		VitalContextHandle.AddSourceObject(AvatarActor);
+		const FGameplayEffectSpecHandle VitalEffectSpec = ASC->MakeOutgoingSpec(ClassInfo->VitalAttributes, Level, VitalContextHandle);
+		ASC->ApplyGameplayEffectSpecToSelf(*VitalEffectSpec.Data.Get());
+	}
 }
