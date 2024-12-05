@@ -16,6 +16,7 @@ class UAuraInputConfig;
 struct FGameplayTag;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
+class UDamageTextComponent;
 
 
 UCLASS()
@@ -27,6 +28,9 @@ public:
 
 	AAuraPlayerController();
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, AActor* TargetCharacter);
 
 protected:
 	virtual void BeginPlay() override;
@@ -82,4 +86,7 @@ private:
 	void ActivateAutoRun();
 	void AutoRun();
 	void HeldRun();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 };
