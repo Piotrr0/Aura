@@ -72,3 +72,22 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Visual Studio files
+.vscode/
+*.code-workspace
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.VC.db
+*.VC.VC.opendb
+
+# Ignore Rider-specific files
+.idea/
+/.idea_modules/
+.idea/*
+*.iml
+
