@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectExecutionCalculation.h"
+#include "Interaction/CombatInterface.h"
 #include "ExecCalc_Damage.generated.h"
 
 /**
@@ -14,5 +15,30 @@ class AURA_API UExecCalc_Damage : public UGameplayEffectExecutionCalculation
 public:
 	UExecCalc_Damage();
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
+
+private:
+
+    float CalculateDamageByType(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+        const FAggregatorEvaluateParameters& EvaluationParameters) const;
+
+    float HandleBlockChance(float Damage,
+        const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+        const FAggregatorEvaluateParameters& EvaluationParameters,
+        FGameplayEffectContextHandle& EffectContextHandle) const;
+
+    float ApplyArmorReduction(float Damage,
+        const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+        const FAggregatorEvaluateParameters& EvaluationParameters,
+        const UAbilitySystemComponent* SourceASC,
+        ICombatInterface* SourceCombatInterface,
+        ICombatInterface* TargetCombatInterface) const;
+
+    float HandleCriticalHit(float Damage,
+        const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+        const FAggregatorEvaluateParameters& EvaluationParameters,
+        FGameplayEffectContextHandle& EffectContextHandle,
+        const UAbilitySystemComponent* SourceASC,
+        ICombatInterface* SourceCombatInterface,
+        ICombatInterface* TargetCombatInterface) const;
 
 };
