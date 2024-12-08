@@ -19,6 +19,12 @@ AAuraEnemy::AAuraEnemy()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>(FName("HealthBar"));
 	HealthBar->SetupAttachment(GetRootComponent());
 }
