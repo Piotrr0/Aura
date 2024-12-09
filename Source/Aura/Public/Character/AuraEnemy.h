@@ -5,6 +5,7 @@
 #include "Interaction/HighlightInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
+#include "Interaction/EnemyInterface.h"
 #include "AuraEnemy.generated.h"
 
 class UWidgetComponent;
@@ -15,7 +16,7 @@ class AAuraAIController;
  * 
  */
 UCLASS()
-class AURA_API AAuraEnemy : public AAuraCharacterBase, public IHighlightInterface
+class AURA_API AAuraEnemy : public AAuraCharacterBase, public IHighlightInterface, public IEnemyInterface
 {
 	GENERATED_BODY()
 
@@ -26,6 +27,8 @@ public:
 
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	virtual int32 GetPlayerLevel() override;
 	virtual void Die() override;
 
@@ -46,6 +49,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -56,7 +62,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bHighlighted = false;
-
 
 private:
 
