@@ -47,6 +47,7 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Dissolve();
+	bDead = true;
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -106,4 +107,14 @@ void AAuraCharacterBase::Dissolve()
 
 		StartWeaponDissolveTimeline(WeaponDynamicMatInst);
 	}
+}
+
+bool AAuraCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* AAuraCharacterBase::GetAvatarActor_Implementation()
+{
+	return this;
 }
