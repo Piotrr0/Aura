@@ -50,6 +50,11 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	bDead = true;
 }
 
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackedMontages_Implementation()
+{
+	return AttackMontages;
+}
+
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
