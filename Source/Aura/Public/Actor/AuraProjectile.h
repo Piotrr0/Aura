@@ -33,7 +33,7 @@ protected:
 private:	
 
 	UPROPERTY(EditDefaultsOnly)
-	float LifeSpawn = 15.f;
+	float LifeSpan = 15.f;
 
 	bool bHit = false;
 	UPROPERTY(VisibleAnywhere)
