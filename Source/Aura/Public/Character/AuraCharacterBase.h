@@ -13,6 +13,7 @@ class UGameplayAbility;
 class UAnimMontage;
 class UMaterialInstance;
 class UMaterialInstanceDynamic;
+class UNiagaraSystem;
 
 UCLASS(Abstract)
 class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
@@ -37,6 +38,7 @@ public:
 	TArray<FTaggedMontage> AttackMontages;
 
 	virtual TArray<FTaggedMontage> GetAttackedMontages_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -91,6 +93,9 @@ protected:
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 
 	bool bDead = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UNiagaraSystem> BloodEffect;
 
 private:
 
