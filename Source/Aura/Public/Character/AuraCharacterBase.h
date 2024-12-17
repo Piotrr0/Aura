@@ -39,6 +39,7 @@ public:
 
 	virtual TArray<FTaggedMontage> GetAttackedMontages_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
+	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MonatgeTag) override;
 
 protected:
 	virtual void BeginPlay() override;
