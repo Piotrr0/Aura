@@ -40,6 +40,7 @@ public:
 	virtual TArray<FTaggedMontage> GetAttackedMontages_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() const override;
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MonatgeTag) override;
+	virtual int32 GetMinionCount_Implementation() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -103,6 +104,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<USoundBase> DeathSound;
+
+	int32 MinionCount = 0;
+
 
 private:
 

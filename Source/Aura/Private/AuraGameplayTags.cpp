@@ -165,6 +165,11 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		FName("Abilities.Attack"),
 		FString("Attack Ability Gameplay Tag")
 	);
+	GameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Summon"),
+		FString("Summon Ability Gameplay Tag")
+	);
+
 
 	GameplayTags.CombatSocket_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("CombatSocket.Weapon"),
@@ -200,5 +205,6 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		FName("Montge.Attack.4"),
 		FString("Attack 4")
 	);
+
 
 }
