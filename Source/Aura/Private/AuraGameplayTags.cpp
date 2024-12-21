@@ -190,19 +190,19 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 
 
 	GameplayTags.Montage_Attack_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montge.Attack.1"),
+		FName("Montage.Attack.1"),
 		FString("Attack 1")
 	);
 	GameplayTags.Montage_Attack_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montge.Attack.2"),
+		FName("Montage.Attack.2"),
 		FString("Attack 2")
 	);
 	GameplayTags.Montage_Attack_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montge.Attack.3"),
+		FName("Montage.Attack.3"),
 		FString("Attack 3")
 	);
 	GameplayTags.Montage_Attack_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Montge.Attack.4"),
+		FName("Montage.Attack.4"),
 		FString("Attack 4")
 	);
 
