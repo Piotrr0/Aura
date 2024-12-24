@@ -16,7 +16,7 @@ struct FActiveGameplayEffectHandle;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, meta = (ExposedAsyncProxy = "AsyncTask"))
 class AURA_API UWaitCooldownChange : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
