@@ -41,7 +41,10 @@ protected:
 
 	FGameplayTag CooldownTag;
 
+	UFUNCTION()
 	void CooldownTagChanged(const FGameplayTag InCooldownTag, int32 NewCount);
+
+	UFUNCTION()
 	void OnActiveEffectAdded(UAbilitySystemComponent* TargetASC, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveEffectHandle);
 
 };
