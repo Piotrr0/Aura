@@ -110,7 +110,9 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				if (CombatInterface)
 				{
 					CombatInterface->Die();
+					
 				}
+				SentXPEvent(Props);
 			}
 			else
 			{
@@ -172,6 +174,24 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float D
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
+	}
+}
+
+void UAuraAttributeSet::SentXPEvent(const FEffectProperties& Props)
+{
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter);
+	if (CombatInterface)
+	{
+		const int TargetLevel = CombatInterface->GetPlayerLevel();
+		const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
+
+		const int32 XPReward = UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
+
+		const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+		FGameplayEventData Payload;
+		Payload.EventMagnitude = XPReward;
+		Payload.EventTag = GameplayTags.Attributes_Meta_IncomingXP;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingXP, Payload);
 	}
 }
 
