@@ -8,6 +8,7 @@
 class UNiagaraComponent;
 class UCameraComponent;
 class USpringArmComponent;
+class USoundBase;
 
 /**
  * 
@@ -45,10 +46,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<USoundBase> LevelUpSound;
+
 private:
 
 	virtual void InitAbilityActorInfo() override;
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastLevelUpParticles() const;
+	void MulticastLevelUpEffects() const;
 
 };

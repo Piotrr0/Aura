@@ -8,6 +8,7 @@
 #include "NiagaraComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -64,18 +65,20 @@ void AAuraCharacter::AddToXP_Implementation(int32 InXP)
 
 void AAuraCharacter::LevelUp_Implementation()
 {
-	MulticastLevelUpParticles();
+	MulticastLevelUpEffects();
 }
 
-void AAuraCharacter::MulticastLevelUpParticles_Implementation() const
+void AAuraCharacter::MulticastLevelUpEffects_Implementation() const
 {
-	if (IsValid(LevelUpNiagaraComponent))
+	if (IsValid(LevelUpNiagaraComponent) && IsValid(LevelUpSound))
 	{
 		const FVector CameraLocation = TopDownCameraComponent->GetComponentLocation();
 		const FVector NiagaraSystemLocation = LevelUpNiagaraComponent->GetComponentLocation();
 		const FRotator ToCameraRotation = (CameraLocation - NiagaraSystemLocation).Rotation();
 		LevelUpNiagaraComponent->SetWorldRotation(ToCameraRotation);
 		LevelUpNiagaraComponent->Activate(true);
+
+		UGameplayStatics::PlaySoundAtLocation(this, LevelUpSound, GetActorLocation());
 	}
 }
 
