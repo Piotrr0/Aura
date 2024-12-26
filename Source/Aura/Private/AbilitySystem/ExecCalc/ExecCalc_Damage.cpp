@@ -81,8 +81,17 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
 	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
-	ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
-	ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
+
+	int32 SourceLevel = 1;
+	if (SourceAvatar->Implements<UCombatInterface>())
+	{
+		SourceLevel = ICombatInterface::Execute_GetPlayerLevel(SourceAvatar);
+	}
+	int32 TargetLevel = 1;
+	if (TargetAvatar->Implements<UCombatInterface>())
+	{
+		TargetLevel = ICombatInterface::Execute_GetPlayerLevel(TargetAvatar);
+	}
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 
@@ -96,8 +105,8 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
 	Damage = HandleBlockChance(Damage, ExecutionParams, EvaluationParameters, EffectContextHandle);
-	Damage = ApplyArmorReduction(Damage, ExecutionParams, EvaluationParameters, SourceASC, SourceCombatInterface, TargetCombatInterface);
-	Damage = HandleCriticalHit(Damage, ExecutionParams, EvaluationParameters, EffectContextHandle, SourceASC, SourceCombatInterface, TargetCombatInterface);
+	Damage = ApplyArmorReduction(Damage, ExecutionParams, EvaluationParameters, SourceASC, SourceLevel, TargetLevel);
+	Damage = HandleCriticalHit(Damage, ExecutionParams, EvaluationParameters, EffectContextHandle, SourceASC, SourceLevel, TargetLevel);
 
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
@@ -147,8 +156,8 @@ float UExecCalc_Damage::ApplyArmorReduction(float Damage,
 	const FGameplayEffectCustomExecutionParameters& ExecutionParams,
 	const FAggregatorEvaluateParameters& EvaluationParameters,
 	const UAbilitySystemComponent* SourceASC,
-	ICombatInterface* SourceCombatInterface,
-	ICombatInterface* TargetCombatInterface) const
+	const int32 SourceLevel,
+	const int32 TargetLevel) const
 {
 	float TargetArmor = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor);
@@ -161,12 +170,12 @@ float UExecCalc_Damage::ApplyArmorReduction(float Damage,
 	const UCharacterClassInfo* CharacterClassInfo = UAuraAbilitySystemLibrary::GetCharacterClassInfo(SourceASC ? SourceASC->GetAvatarActor() : nullptr);
 
 	const FRealCurve* ArmorPenetrationCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmorPenetration"), FString());
-	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel());
+	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceLevel);
 
 	const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
 
 	const FRealCurve* EffectiveArmorCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmor"), FString());
-	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetLevel);
 
 	return Damage * (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
 }
@@ -176,8 +185,8 @@ float UExecCalc_Damage::HandleCriticalHit(float Damage,
 	const FAggregatorEvaluateParameters& EvaluationParameters,
 	FGameplayEffectContextHandle& EffectContextHandle,
 	const UAbilitySystemComponent* SourceASC,
-	ICombatInterface* SourceCombatInterface,
-	ICombatInterface* TargetCombatInterface) const
+	const int32 SourceLevel,
+	const int32 TargetLevel) const
 {
 	float SourceCriticalHitChance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef, EvaluationParameters, SourceCriticalHitChance);
@@ -194,7 +203,7 @@ float UExecCalc_Damage::HandleCriticalHit(float Damage,
 	const UCharacterClassInfo* CharacterClassInfo = UAuraAbilitySystemLibrary::GetCharacterClassInfo(SourceASC ? SourceASC->GetAvatarActor() : nullptr);
 
 	const FRealCurve* CriticalHitResistanceCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString());
-	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetLevel);
 
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;

@@ -30,15 +30,15 @@ private:
         const FGameplayEffectCustomExecutionParameters& ExecutionParams,
         const FAggregatorEvaluateParameters& EvaluationParameters,
         const UAbilitySystemComponent* SourceASC,
-        ICombatInterface* SourceCombatInterface,
-        ICombatInterface* TargetCombatInterface) const;
+        const int32 SourceLevel,
+        const int32 TargetLevel) const;
 
     float HandleCriticalHit(float Damage,
         const FGameplayEffectCustomExecutionParameters& ExecutionParams,
         const FAggregatorEvaluateParameters& EvaluationParameters,
         FGameplayEffectContextHandle& EffectContextHandle,
         const UAbilitySystemComponent* SourceASC,
-        ICombatInterface* SourceCombatInterface,
-        ICombatInterface* TargetCombatInterface) const;
+        const int32 SourceLevel,
+        const int32 TargetLevel) const;
 
 };
