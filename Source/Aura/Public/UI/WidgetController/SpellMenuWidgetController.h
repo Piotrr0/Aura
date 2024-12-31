@@ -37,7 +37,10 @@ public:
 	void SpendPointButtonPressed();
 
 	UFUNCTION(BlueprintCallable)
-	void EquippedButtonPressed();
+	void EquipButtonPressed();
+
+	UFUNCTION(BlueprintCallable)
+	void SpellRowGlobePressed(const FGameplayTag& SlotTag, const FGameplayTag& AbilityTag);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerStatChangedSignature SpellPointsChanged;
@@ -51,6 +54,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FWaitForEquipSelectionSignature StopWaitingForEquipDelegate;
 
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PrevSlot);
+
 	bool bWaitingForEquipSelection = false;
 
 private:
@@ -59,5 +64,6 @@ private:
 
 	FSelectedAbility SelectedAbility = { FAuraGameplayTags::Get().Abilities_None,  FAuraGameplayTags::Get().Abilities_Status_Locked };
 	int32 CurrentSpellPoints = 0;
+	FGameplayTag SelectedSlot;
 
 };
