@@ -3,7 +3,9 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Data/CharacterClassInfo.h"
+#include "AuraAbilityTypes.h"
 #include "AuraAbilitySystemLibrary.generated.h"
+
 
 class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
@@ -64,5 +66,8 @@ public:
 	static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
 
 	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, const ECharacterClass& CharacterClass, int32 CharacterLevel);
+
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams);
 
 };
