@@ -19,7 +19,7 @@ public:
 private:
 
     float CalculateDamageByType(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
-        const FAggregatorEvaluateParameters& EvaluationParameters) const;
+        const FAggregatorEvaluateParameters& EvaluationParameters, const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDefs) const;
 
     float HandleBlockChance(float Damage,
         const FGameplayEffectCustomExecutionParameters& ExecutionParams,
