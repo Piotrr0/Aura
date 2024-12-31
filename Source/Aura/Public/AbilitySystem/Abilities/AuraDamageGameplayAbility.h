@@ -4,6 +4,8 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AuraDamageGameplayAbility.generated.h"
 
+struct FScalableFloat;
+
 /**
  * 
  */
@@ -21,11 +23,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	TMap<FGameplayTag, FScalableFloat> DamageTypes;
+	UPROPERTY(EditDefaultsOnly)
+	FScalableFloat Damage;
+
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag DamageType;
 
 	UFUNCTION(BlueprintPure)
 	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const;
-
-	int32 GetDamageByDamageType(int32 InLevel, const FGameplayTag& DamageType);
 };

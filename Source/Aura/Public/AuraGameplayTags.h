@@ -43,6 +43,11 @@ public:
 	FGameplayTag Attributes_Resistance_Arcane;
 	FGameplayTag Attributes_Resistance_Physical;
 
+	FGameplayTag Debuff_Burn;
+	FGameplayTag Debuff_Stun;
+	FGameplayTag Debuff_Arcane;
+	FGameplayTag Debuff_Physical;
+
 	FGameplayTag Attributes_Meta_IncomingXP;
 
 	FGameplayTag Damage;
@@ -84,6 +89,7 @@ public:
 	FGameplayTag Montage_Attack_4;
 
 	TMap<FGameplayTag /*Damage*/, FGameplayTag /*Resistance*/> DamageTypesToResistances;
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 
 protected:
 
