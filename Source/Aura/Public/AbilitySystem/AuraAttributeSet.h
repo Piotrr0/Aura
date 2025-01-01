@@ -211,6 +211,10 @@ private:
 	void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const;
 	void SentXPEvent(const FEffectProperties& Props);
 
+	void HandleIncomingDamage(const FEffectProperties& Props);
+	void HandleIncomingXP(const FEffectProperties& Props);
+	void Debuff(const FEffectProperties& Props);
+
 	bool bTopOffHealth = false;
 	bool bTopOffMana = false;
 
