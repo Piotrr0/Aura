@@ -10,6 +10,7 @@
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 #include "UI/Widget/DamageTextComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -143,6 +144,7 @@ void AAuraPlayerController::ActivateAutoRun()
 				bAutoRunning = true;
 			}
 		}
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
 	}
 	FollowTime = 0.f;
 	bTargeting = false; // Consider to remove
