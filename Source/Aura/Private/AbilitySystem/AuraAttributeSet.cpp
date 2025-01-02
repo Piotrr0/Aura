@@ -285,7 +285,7 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	*/
 
 	Effect->InheritableOwnedTagsContainer.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
-	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
+	Effect->StackingType = EGameplayEffectStackingType::AggregateByTarget;
 	Effect->StackLimitCount = 1;
 
 	FGameplayModifierInfo ModifierInfo = FGameplayModifierInfo();
