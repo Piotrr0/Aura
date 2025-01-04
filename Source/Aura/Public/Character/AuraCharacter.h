@@ -38,6 +38,8 @@ protected:
 	virtual int32 GetAttributePoints_Implementation() const;
 	virtual int32 GetSpellPoints_Implementation() const;
 
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
+	virtual void OnRep_Stunned() override;
 
 
 	UPROPERTY(VisibleAnywhere)

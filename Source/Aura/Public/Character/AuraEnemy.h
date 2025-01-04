@@ -41,9 +41,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	bool bHitReacting = false;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float BaseWalkSpeed = 250.f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 3.f;
@@ -61,6 +58,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bHighlighted = false;
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 
 private:
 
