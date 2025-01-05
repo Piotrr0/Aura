@@ -40,6 +40,7 @@ protected:
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 	virtual void OnRep_Stunned() override;
+	virtual void OnRep_Burned() override;
 
 
 	UPROPERTY(VisibleAnywhere)
