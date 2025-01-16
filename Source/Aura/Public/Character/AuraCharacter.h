@@ -9,6 +9,7 @@ class UNiagaraComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class USoundBase;
+class UMaterialInterface;
 
 /**
  * 
@@ -37,6 +38,8 @@ protected:
 	virtual void AddToSpellPoints_Implementation(int32 InSpellPoints) override;
 	virtual int32 GetAttributePoints_Implementation() const;
 	virtual int32 GetSpellPoints_Implementation() const;
+	virtual void ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial) override;
+	virtual void HideMagicCircle_Implementation() override;
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 	virtual void OnRep_Stunned() override;
