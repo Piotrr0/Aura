@@ -6,6 +6,7 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 struct AuraDamageStatics
 {
@@ -101,9 +102,10 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
-	float Damage = CalculateDamageByType(ExecutionParams, EvaluationParameters, TagsToCaptureDefs);
-
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+
+	float Damage = CalculateDamageByType(ExecutionParams, EvaluationParameters, TagsToCaptureDefs, EffectContextHandle, TargetAvatar, SourceAvatar);
+
 	Damage = HandleBlockChance(Damage, ExecutionParams, EvaluationParameters, EffectContextHandle);
 	Damage = ApplyArmorReduction(Damage, ExecutionParams, EvaluationParameters, SourceASC, SourceLevel, TargetLevel);
 	Damage = HandleCriticalHit(Damage, ExecutionParams, EvaluationParameters, EffectContextHandle, SourceASC, SourceLevel, TargetLevel);
@@ -113,7 +115,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 }
 
 float UExecCalc_Damage::CalculateDamageByType(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
-	const FAggregatorEvaluateParameters& EvaluationParameters, const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDefs) const
+	const FAggregatorEvaluateParameters& EvaluationParameters, const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& TagsToCaptureDefs, FGameplayEffectContextHandle& EffectContextHandle, AActor* Target, AActor* Source) const
 {
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
@@ -164,7 +166,33 @@ float UExecCalc_Damage::CalculateDamageByType(const FGameplayEffectCustomExecuti
 		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
 
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
+
+		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
+		{
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Target))
+			{
+				CombatInterface->GetOnDamageSignature().AddLambda([&](float DamageAmount)
+					{
+						DamageTypeValue = DamageAmount;
+					});
+			}
+
+			UGameplayStatics::ApplyRadialDamageWithFalloff(
+				Target,
+				DamageTypeValue,
+				0.f,
+				UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+				1.f,
+				UDamageType::StaticClass(),
+				TArray<AActor*>(),
+				Source,
+				nullptr);
+		}
+
 		Damage += DamageTypeValue;
+
 	}
 
 	return Damage;
