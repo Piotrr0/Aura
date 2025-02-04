@@ -1,4 +1,5 @@
 #include "AbilitySystem/Abilities/AuraFireBlast.h"
+#include "Actor/AuraFireBall.h"
 
 FString UAuraFireBlast::GetDescription(int32 Level)
 {
@@ -42,4 +43,9 @@ FString UAuraFireBlast::GetNextLevelDescription(int32 Level)
 		Cooldown,
 		NumFireBalls,
 		ScaledDamage);
+}
+
+TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
+{
+	return TArray<AAuraFireBall*>();
 }
