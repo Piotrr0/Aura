@@ -40,8 +40,8 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSub
 void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;
-
 	FScopedAbilityListLock ActivateScopeLoc(*this);
+
 	for (auto& AbilitySpec : GetActivatableAbilities())
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
@@ -269,7 +269,6 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 				FGameplayAbilitySpec* SpecWithSlot = GetSpecWithSlot(Slot);
 				if (SpecWithSlot)
 				{
-					// is that ability the same as this ability? If so, we can return early.
 					if (AbilityTag.MatchesTagExact(GetAbilityTagFromSpec(*SpecWithSlot)))
 					{
 						ClientEquipAbility(AbilityTag, GameplayTags.Abilities_Status_Equipped, Slot, PrevSlot);
@@ -290,8 +289,8 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 			{
 				if (IsPassiveAbility(*AbilitySpec))
 				{
-					MulticastActivatePassiveEffect(AbilityTag, true);
 					TryActivateAbility(AbilitySpec->Handle);
+					MulticastActivatePassiveEffect(AbilityTag, true);
 				}
 			}
 			AssignSlotToAbility(*AbilitySpec, Slot);
@@ -390,7 +389,6 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 		ClientUpdateAbilityStatus(AbilityTag, Status, AbilitySpec->Level);
 		MarkAbilitySpecDirty(*AbilitySpec);
 	}
-
 }
 
 void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle)

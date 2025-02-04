@@ -15,18 +15,15 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 {
 	GetAuraASC()->AbilityStatusChanged.AddLambda([this](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 NewLevel)
 		{
-			if (SelectedAbility.Ability.MatchesTag(AbilityTag))
+			if (SelectedAbility.Ability.MatchesTagExact(AbilityTag))
 			{
 				SelectedAbility.Status = StatusTag;
-
 				bool bEnableSpendPoints = false;
 				bool bEnableEquip = false;
 				ShouldEnableButtons(StatusTag, CurrentSpellPoints, bEnableSpendPoints, bEnableEquip);
-
 				FString Description;
 				FString NextLevelDescription;
 				GetAuraASC()->GetDescriptionsByAbilityTag(AbilityTag, Description, NextLevelDescription);
-
 				SpellGlobeSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip, Description, NextLevelDescription);
 			}
 
@@ -40,19 +37,17 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 
 	GetAuraASC()->AbilityEquipped.AddUObject(this, &USpellMenuWidgetController::OnAbilityEquipped);
 
-	GetAuraPS()->OnSpellPointsChangedDelegate.AddLambda([this](int32 SpellPoints) 
+	GetAuraPS()->OnSpellPointsChangedDelegate.AddLambda([this](int32 SpellPoints)
 		{
-			CurrentSpellPoints = SpellPoints;
 			SpellPointsChanged.Broadcast(SpellPoints);
+			CurrentSpellPoints = SpellPoints;
 
 			bool bEnableSpendPoints = false;
 			bool bEnableEquip = false;
 			ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints, bEnableSpendPoints, bEnableEquip);
-
 			FString Description;
 			FString NextLevelDescription;
 			GetAuraASC()->GetDescriptionsByAbilityTag(SelectedAbility.Ability, Description, NextLevelDescription);
-
 			SpellGlobeSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip, Description, NextLevelDescription);
 		});
 }
@@ -160,8 +155,6 @@ void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTa
 	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
 	Info.StatusTag = Status;
 	Info.InputTag = Slot;
-	Info.AbilityTag = AbilityTag;
-
 	AbilityInfoDelegate.Broadcast(Info);
 
 	StopWaitingForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType);
