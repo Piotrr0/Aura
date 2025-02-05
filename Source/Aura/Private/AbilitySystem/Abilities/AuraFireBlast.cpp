@@ -64,6 +64,8 @@ TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
 			CurrentActorInfo->PlayerController->GetPawn(),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
+		FireBall->ExplosionDamageParams = MakeDamageEffectParamsFromClassDefaults();
+		FireBall->SetOwner(GetAvatarActorFromActorInfo());
 		FireBall->ReturnToActor = GetAvatarActorFromActorInfo();
 		FireBall->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 		FireBalls.Add(FireBall);
