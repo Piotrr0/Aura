@@ -107,6 +107,8 @@ public:
 	FGameplayTag Player_Block_InputReleased;
 	FGameplayTag Player_Block_CursorTrace;
 
+	FGameplayTag GameplayCue_FireBlast;
+
 	TMap<FGameplayTag /*Damage*/, FGameplayTag /*Resistance*/> DamageTypesToResistances;
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 
