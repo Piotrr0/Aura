@@ -33,16 +33,16 @@ protected:
 	virtual void Destroyed() override;
 	UFUNCTION(BlueprintCallable)
 	virtual void OnHit();
+	bool IsValidOverlap(AActor* OtherActor);
 
 	UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	bool bHit = false;
 private:	
 
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
-
-	bool bHit = false;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
