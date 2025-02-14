@@ -27,6 +27,7 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
 {
 	AAuraGameMode* AuraGameMode = Cast<AAuraGameMode>(UGameplayStatics::GetGameMode(this));
 	LoadSlots[Slot]->SetPlayerName(EnteredName);
+	LoadSlots[Slot]->SlotStatus = Taken;
 
 	AuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
 	LoadSlots[Slot]->InitializeSlot();
@@ -39,4 +40,16 @@ void UMVVM_LoadScreen::NewGameButtonPressed(int32 Slot)
 
 void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 Slot)
 {
+}
+
+void UMVVM_LoadScreen::LoadData()
+{
+	const AAuraGameMode* AuraGameMode = Cast<AAuraGameMode>(UGameplayStatics::GetGameMode(this));
+	for (const auto& LoadSlot : LoadSlots)
+	{
+		const ULoadScreenSaveGame* SaveObejct = AuraGameMode->GetSaveSlotData(LoadSlot.Value->LoadSlotName, LoadSlot.Key);
+		LoadSlot.Value->SetPlayerName(SaveObejct->PlayerName);
+		LoadSlot.Value->SlotStatus = SaveObejct->SaveSlotStatus;
+		LoadSlot.Value->InitializeSlot();
+	}
 }
