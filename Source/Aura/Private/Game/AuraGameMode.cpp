@@ -2,6 +2,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/ViewModel/MVVM_LoadSlot.h"
 #include "Game/LoadScreenSaveGame.h"
+#include "GameFramework/PlayerStart.h"
 
 void AAuraGameMode::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -29,6 +30,27 @@ void AAuraGameMode::TravelToMap(UMVVM_LoadSlot* Slot)
 	const int32 SlotIndex = Slot->SlotIndex;
 
 	UGameplayStatics::OpenLevelBySoftObjectPtr(Slot, Maps.FindChecked(Slot->GetMapName()));
+}
+
+AActor* AAuraGameMode::ChoosePlayerStart_Implementation(AController* Player)
+{
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Actors);
+	if (Actors.Num() > 0)
+	{
+		AActor* SelectedActors = Actors[0];
+		for (AActor* Actor : Actors)
+		{
+			APlayerStart* PlayerStart = Cast<APlayerStart>(Actor);
+			if (PlayerStart->PlayerStartTag == FName("Tag"))
+			{
+				SelectedActors = PlayerStart;
+				break;
+			}
+		}
+		return SelectedActors;
+	}
+	return nullptr;
 }
 
 void AAuraGameMode::BeginPlay()
