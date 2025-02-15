@@ -34,6 +34,9 @@ public:
 	TSubclassOf<USaveGame> LoadScreenSaveGameClass;
 
 	UPROPERTY(EditDefaultsOnly)
+	FName DefaultPlayerStartTag;
+
+	UPROPERTY(EditDefaultsOnly)
 	FString DefaultMapName;
 
 	UPROPERTY(EditDefaultsOnly)

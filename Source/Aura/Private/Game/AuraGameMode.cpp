@@ -3,6 +3,7 @@
 #include "UI/ViewModel/MVVM_LoadSlot.h"
 #include "Game/LoadScreenSaveGame.h"
 #include "GameFramework/PlayerStart.h"
+#include "Game/AuraGameInstance.h"
 
 void AAuraGameMode::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -34,6 +35,7 @@ void AAuraGameMode::TravelToMap(UMVVM_LoadSlot* Slot)
 
 AActor* AAuraGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
+	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Actors);
 	if (Actors.Num() > 0)
@@ -42,7 +44,7 @@ AActor* AAuraGameMode::ChoosePlayerStart_Implementation(AController* Player)
 		for (AActor* Actor : Actors)
 		{
 			APlayerStart* PlayerStart = Cast<APlayerStart>(Actor);
-			if (PlayerStart->PlayerStartTag == FName("Tag"))
+			if (PlayerStart->PlayerStartTag == AuraGameInstance->PlayerStartTag)
 			{
 				SelectedActors = PlayerStart;
 				break;
