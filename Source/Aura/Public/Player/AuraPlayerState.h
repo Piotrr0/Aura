@@ -45,6 +45,8 @@ public:
 
 	void SetXP(int32 InXP);
 	void SetLevel(int32 InLevel);
+	void SetSpellPoints(int32 InSpellPoints);
+	void SetAttributePoints(int32 InAttributePoints);
 
 protected:
 	UPROPERTY(VisibleAnywhere)
