@@ -9,7 +9,8 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class ULevelUpInfo;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /*StatValue*/)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /*StatValue*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnLevelChanged, int32 /*StatValue*/, bool);
 
 /**
  * 
@@ -30,8 +31,8 @@ public:
 	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
 	FORCEINLINE int32 GetSpellPoints() const { return SpellPoints; }
 
+	FOnLevelChanged OnLevelChangedDelegate;
 	FOnPlayerStatChanged OnXPChangedDelegate;
-	FOnPlayerStatChanged OnLevelChangedDelegate;
 	FOnPlayerStatChanged OnAttributePointsChangedDelegate;
 	FOnPlayerStatChanged OnSpellPointsChangedDelegate;
 
