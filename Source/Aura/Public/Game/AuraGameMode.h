@@ -32,6 +32,7 @@ public:
 	ULoadScreenSaveGame* RetrieveInGameSaveData();
 	void SaveInGameProgressData(ULoadScreenSaveGame* SaveObject);
 	void SaveWorldState(UWorld* World);
+	void LoadWorldState(UWorld* World);
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USaveGame> LoadScreenSaveGameClass;

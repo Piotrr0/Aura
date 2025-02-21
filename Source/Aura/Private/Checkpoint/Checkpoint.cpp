@@ -1,6 +1,7 @@
 #include "Checkpoint/Checkpoint.h"
 #include "Components/SphereComponent.h"
 #include "Interaction/PlayerInterface.h"
+#include "Game/AuraGameMode.h"
 
 ACheckpoint::ACheckpoint(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer)
@@ -29,6 +30,12 @@ void ACheckpoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* O
 {
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
+		bReached = true;
+		if (AAuraGameMode* AuraGM = Cast<AAuraGameMode>(UGameplayStatics::GetGameMode(this)))
+		{
+			AuraGM->SaveWorldState(GetWorld());
+		}
+
 		HandleGlowEffects();
 		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
 	}
@@ -40,4 +47,12 @@ void ACheckpoint::HandleGlowEffects()
 	UMaterialInstanceDynamic* DynamicMaterialInstace = UMaterialInstanceDynamic::Create(CheckpointMesh->GetMaterial(0), this);
 	CheckpointMesh->SetMaterial(0, DynamicMaterialInstace);
 	CheckpointReached(DynamicMaterialInstace);
+}
+
+void ACheckpoint::LoadActor_Implementation()
+{
+	if (bReached)
+	{
+		HandleGlowEffects();
+	}
 }
