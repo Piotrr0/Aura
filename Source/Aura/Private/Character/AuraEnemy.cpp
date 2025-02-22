@@ -28,6 +28,12 @@ AAuraEnemy::AAuraEnemy()
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>(FName("HealthBar"));
 	HealthBar->SetupAttachment(GetRootComponent());
 
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+
+	GetMesh()->MarkRenderStateDirty();
+	Weapon->MarkRenderStateDirty();
+
 	BaseWalkSpeed = 250;
 }
 
@@ -59,10 +65,7 @@ void AAuraEnemy::HighlightActor_Implementation()
 {
 	bHighlighted = true;
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED); // Value for Highlight
-
 	Weapon->SetRenderCustomDepth(true);
-	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 
 	UE_LOG(LogTemp, Warning, TEXT("%s Highlight"), *GetName());
 }
@@ -73,6 +76,11 @@ void AAuraEnemy::UnHighlightActor_Implementation()
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
 	UE_LOG(LogTemp, Warning, TEXT("%s UnHighlight"), *GetName());
+}
+
+void AAuraEnemy::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+	// Nothing
 }
 
 void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
