@@ -2,6 +2,7 @@
 #include "Components/SphereComponent.h"
 #include "Interaction/PlayerInterface.h"
 #include "Game/AuraGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 ACheckpoint::ACheckpoint(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer)
