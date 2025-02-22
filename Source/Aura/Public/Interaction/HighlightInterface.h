@@ -4,7 +4,9 @@
 #include "UObject/Interface.h"
 #include "HighlightInterface.generated.h"
 
-#define CUSTOM_DEPTH_HIGHLIGHT 250
+#define CUSTOM_DEPTH_RED 250
+#define CUSTOM_DEPTH_BLUE 251
+#define CUSTOM_DEPTH_TAN 252
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -23,6 +25,9 @@ class AURA_API IHighlightInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	virtual void HighlightActor() = 0;
-	virtual void UnHighlightActor() = 0;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void HighlightActor();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void UnHighlightActor();
 };

@@ -55,19 +55,19 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 }
 
 
-void AAuraEnemy::HighlightActor()
+void AAuraEnemy::HighlightActor_Implementation()
 {
 	bHighlighted = true;
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_HIGHLIGHT); // Value for Highlight
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED); // Value for Highlight
 
 	Weapon->SetRenderCustomDepth(true);
-	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_HIGHLIGHT);
+	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 
 	UE_LOG(LogTemp, Warning, TEXT("%s Highlight"), *GetName());
 }
 
-void AAuraEnemy::UnHighlightActor()
+void AAuraEnemy::UnHighlightActor_Implementation()
 {
 	bHighlighted = false;
 	GetMesh()->SetRenderCustomDepth(false);

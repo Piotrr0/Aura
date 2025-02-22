@@ -20,6 +20,13 @@ class UDamageTextComponent;
 class UNiagaraSystem;
 class AMagicCircle;
 
+enum class ETargetingStatus : uint8
+{
+	TargetingEnemy,
+	TargetingNonEnemy,
+	NotTargeting
+};
+
 UCLASS()
 class AURA_API AAuraPlayerController : public APlayerController
 {
@@ -69,8 +76,11 @@ private:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 
-	TScriptInterface<IHighlightInterface> LastHighlightActor;
-	TScriptInterface<IHighlightInterface> CurrentHighlightActor;
+	TObjectPtr<AActor> LastActor;
+	TObjectPtr<AActor> ThisActor;
+
+	static void HighlightActor(AActor* InActor);
+	static void UnHighlightActor(AActor* InActor);
 
 	FHitResult CursorHit;
 
@@ -88,7 +98,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline;
 
-	bool bTargeting = false;
+	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
 
 	void ActivateAutoRun();
 	void AutoRun();
