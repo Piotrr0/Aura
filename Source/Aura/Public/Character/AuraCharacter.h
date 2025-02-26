@@ -45,6 +45,12 @@ protected:
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 	virtual void OnRep_Stunned() override;
 	virtual void OnRep_Burned() override;
+	virtual void Die(const FVector& DeathImpulse) override;
+
+	UPROPERTY(EditDefaultsOnly)
+	float DeathTime = 5.f;
+	FTimerHandle DeathTimer;
+
 
 	void LoadProgress();
 

@@ -48,6 +48,9 @@ public:
 	void SetPlayerLevel(int32 InPlayerLevel);
 	int32 GetPlayerLevel() const { return PlayerLevel; }
 
+	UPROPERTY()
+	FString MapAssetName;
+
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = true));
