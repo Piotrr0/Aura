@@ -12,6 +12,7 @@ class UAttributeMenuWidgetController;
 class UAbilitySystemComponent;
 class UCharacterClassInfo;
 class UAbilityInfo;
+class ULootTiers;
 struct FWidgetControllerParams;
 
 /**
@@ -56,6 +57,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
 	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
+	static ULootTiers* GetLootTiers(const UObject* WorldContextObject);
 
 	/*
 	 * Effect Context Getters

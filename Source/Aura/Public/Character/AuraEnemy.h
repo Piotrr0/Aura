@@ -60,6 +60,9 @@ protected:
 	void BindCallbacksToDependencies();
 	void BroadcastInitialValues();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void SpawnLoot();
+
 	UPROPERTY(BlueprintReadOnly)
 	bool bHighlighted = false;
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
