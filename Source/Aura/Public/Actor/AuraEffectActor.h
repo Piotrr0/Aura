@@ -99,10 +99,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Applied Effects")
 	float ActorLevel = 1.f;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	FVector CalculatedLocation;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	FRotator CalculatedRotation;
 
 private:
