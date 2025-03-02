@@ -4,6 +4,8 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AuraPassiveAbility.generated.h"
 
+class UGameplayEffect;
+
 /**
  * 
  */
@@ -17,4 +19,13 @@ public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	
 	void ReceiveDeactivate(const FGameplayTag& AbilityTag);
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	float Period;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> PassiveEffect;
+
 };
