@@ -27,6 +27,6 @@ protected:
 
 private:
 
-	bool StickToGroundLocation(const FVector& Location, FVector& OutGroundLocation, float Offset = 0.f);
+	bool StickToGroundLocation(const FVector& Location, FVector& OutGroundLocation, float Offset = 0.f) const;
 
 };

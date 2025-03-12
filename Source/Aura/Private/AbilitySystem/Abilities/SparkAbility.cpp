@@ -43,7 +43,7 @@ void USparkAbility::SpawnSparks(const FVector& ProjectileTargetLocation, const F
 	}
 }
 
-bool USparkAbility::StickToGroundLocation(const FVector& Location, FVector& OutGroundLocation, float Offset)
+bool USparkAbility::StickToGroundLocation(const FVector& Location, FVector& OutGroundLocation, float Offset) const
 {
 	const FVector Start = Location + FVector(0.f, 0.f, 500.f);
 	const FVector End = Location + FVector(0.f, 0.f, -500.f);
