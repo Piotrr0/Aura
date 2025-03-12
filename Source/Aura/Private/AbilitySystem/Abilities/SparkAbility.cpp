@@ -2,6 +2,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Actor/AuraProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 void USparkAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -16,7 +17,8 @@ void USparkAbility::SpawnSparks(const FVector& ProjectileTargetLocation, const F
 	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), SocketTag);
 	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 
-	if (bOverridePitch) Rotation.Pitch = PitchOverride;
+	if (bOverridePitch)
+		Rotation.Pitch = PitchOverride;
 
 	const FVector Forward = Rotation.Vector();
 	const int32 EffectiveNumProjectiles = 5;
@@ -24,13 +26,35 @@ void USparkAbility::SpawnSparks(const FVector& ProjectileTargetLocation, const F
 
 	for (const FRotator& Rot : Rotations)
 	{
+		FVector SpawnLocation;
+		if (!StickToGroundLocation(SocketLocation, SpawnLocation, 50.f))
+		{
+			SpawnLocation = SocketLocation;
+		}
+
 		FTransform SpawnTransform;
-		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetLocation(SpawnLocation);
 		SpawnTransform.SetRotation(Rot.Quaternion());
 
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(AuraProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
-
+		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 		Projectile->FinishSpawning(SpawnTransform);
 	}
+}
+
+bool USparkAbility::StickToGroundLocation(const FVector& Location, FVector& OutGroundLocation, float Offset)
+{
+	const FVector Start = Location + FVector(0.f, 0.f, 500.f);
+	const FVector End = Location + FVector(0.f, 0.f, -500.f);
+
+	FHitResult HitResult;
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
+	if (HitResult.bBlockingHit)
+	{
+		OutGroundLocation = HitResult.ImpactPoint + FVector(0.f, 0.f, Offset);
+		return true;
+	}
+
+	return false;
 }
