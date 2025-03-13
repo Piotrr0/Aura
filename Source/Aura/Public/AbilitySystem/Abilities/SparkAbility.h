@@ -25,8 +25,4 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "FireBolt")
 	float MaxNumProjectiles = 5.f;
 
-private:
-
-	bool StickToGroundLocation(const FVector& Location, FVector& OutGroundLocation, float Offset = 0.f) const;
-
 };

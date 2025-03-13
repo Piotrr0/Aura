@@ -6,6 +6,9 @@
 ASpark::ASpark()
 {
 	ProjectileMovement->bShouldBounce = true;
+	ProjectileMovement->bConstrainToPlane = true;
+	ProjectileMovement->SetPlaneConstraintNormal(FVector(0.f, 0.f, 1.f));
+	ProjectileMovement->ProjectileGravityScale = 0.0f;
 }
 
 void ASpark::BeginPlay()
@@ -44,7 +47,7 @@ void ASpark::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 
 void ASpark::OnProjectileBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
-	FVector NewVelocity = ProjectileMovement->Velocity;
+	FVector NewVelocity = ImpactVelocity;
 	NewVelocity.Z = 0.0f;
 
 	ProjectileMovement->Velocity = NewVelocity;

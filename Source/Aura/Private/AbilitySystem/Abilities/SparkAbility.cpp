@@ -27,7 +27,7 @@ void USparkAbility::SpawnSparks(const FVector& ProjectileTargetLocation, const F
 	for (const FRotator& Rot : Rotations)
 	{
 		FVector SpawnLocation;
-		if (!StickToGroundLocation(SocketLocation, SpawnLocation, 50.f))
+		if (!UAuraAbilitySystemLibrary::StickToGroundLocation(this, SocketLocation, SpawnLocation, 45.f))
 		{
 			SpawnLocation = SocketLocation;
 		}
@@ -41,20 +41,4 @@ void USparkAbility::SpawnSparks(const FVector& ProjectileTargetLocation, const F
 		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-}
-
-bool USparkAbility::StickToGroundLocation(const FVector& Location, FVector& OutGroundLocation, float Offset) const
-{
-	const FVector Start = Location + FVector(0.f, 0.f, 500.f);
-	const FVector End = Location + FVector(0.f, 0.f, -500.f);
-
-	FHitResult HitResult;
-	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
-	if (HitResult.bBlockingHit)
-	{
-		OutGroundLocation = HitResult.ImpactPoint + FVector(0.f, 0.f, Offset);
-		return true;
-	}
-
-	return false;
 }
