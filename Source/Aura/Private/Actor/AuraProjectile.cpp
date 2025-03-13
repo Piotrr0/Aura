@@ -43,6 +43,8 @@ void AAuraProjectile::Destroyed()
 {
 	Super::Destroyed();
 
+	ActorUntargetableTimer.Invalidate();
+
 	if (LoopingSoundComponent)
 	{
 		LoopingSoundComponent->Stop();
@@ -67,6 +69,8 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
+			if (UntargetableActors.Contains(TargetASC->GetAvatarActor())) return;
+
 			const FVector DeathImpulse = GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;
 			DamageEffectParams.DeathImpulse = DeathImpulse;
 
@@ -81,12 +85,38 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 			}
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
+			HandlePierceBehaviour();
 		}
-		Destroy();
+		else
+		{
+			Destroy();
+		}
 	}
 	else
 	{
 		bHit = true;
+	}
+}
+
+void AAuraProjectile::HandlePierceBehaviour()
+{
+	if (Pierce <= 1)
+	{
+		Destroy();
+	}
+	else
+	{
+		Pierce--;
+		UntargetableActors.Add(DamageEffectParams.TargetAbilitySystemComponent->GetAvatarActor());
+
+		FTimerDelegate ActorUntargetableTimerDelegate;
+		ActorUntargetableTimerDelegate.BindLambda([this]()
+			{
+				UntargetableActors.RemoveSwap(DamageEffectParams.TargetAbilitySystemComponent->GetAvatarActor());
+			}
+		);
+
+		GetWorldTimerManager().SetTimer(ActorUntargetableTimer, ActorUntargetableTimerDelegate, 0.66f, false);
 	}
 }
 

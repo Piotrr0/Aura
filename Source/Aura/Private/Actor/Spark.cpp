@@ -2,6 +2,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 ASpark::ASpark()
 {
@@ -36,13 +37,21 @@ void ASpark::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
+			if (UntargetableActors.Contains(TargetASC->GetAvatarActor())) return;
+
 			const FVector DeathImpulse = GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;
 			DamageEffectParams.DeathImpulse = DeathImpulse;
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 
 			UAuraAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
+			HandlePierceBehaviour();
 		}
 	}
+}
+
+void ASpark::HandlePierceBehaviour()
+{
+	Super::HandlePierceBehaviour();
 }
 
 void ASpark::OnProjectileBounce(const FHitResult& ImpactResult, const FVector& ImpactVelocity)

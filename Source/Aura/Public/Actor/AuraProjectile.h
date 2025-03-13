@@ -11,6 +11,7 @@ class UNiagaraSystem;
 class UAudioComponent;
 struct FDamageEffectParams;
 
+
 UCLASS()
 class AURA_API AAuraProjectile : public AActor
 {
@@ -38,11 +39,20 @@ protected:
 	UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	virtual void HandlePierceBehaviour();
+
 	bool bHit = false;
+
+	UPROPERTY(EditDefaultsOnly)
+	int Pierce = 1;
+
+	TArray<AActor*> UntargetableActors;
 
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 private:	
+
+	FTimerHandle ActorUntargetableTimer;
 
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
