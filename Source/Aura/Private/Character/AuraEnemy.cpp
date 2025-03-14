@@ -106,6 +106,9 @@ void AAuraEnemy::Die(const FVector& DeathImpulse)
 
 	if (AuraAIController)
 		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("IsDead"), true);
+
+	if (HealthBar)
+		HealthBar->DestroyComponent();
 }
 
 void AAuraEnemy::BeginPlay()
