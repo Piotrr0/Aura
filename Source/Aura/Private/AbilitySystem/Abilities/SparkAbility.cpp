@@ -21,7 +21,7 @@ void USparkAbility::SpawnSparks(const FVector& ProjectileTargetLocation, const F
 		Rotation.Pitch = PitchOverride;
 
 	const FVector Forward = Rotation.Vector();
-	const int32 EffectiveNumProjectiles = 5;
+	const int32 EffectiveNumProjectiles = FMath::Max(NumProjectiles - 1 + GetAbilityLevel(), MaxNumProjectiles);
 	TArray<FRotator> Rotations = UAuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, ProjectileSpread, EffectiveNumProjectiles);
 
 	for (const FRotator& Rot : Rotations)
